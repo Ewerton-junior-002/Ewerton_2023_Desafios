@@ -1,0 +1,231 @@
+=============================================================================================================================
+sudo apt update
+senha:
+error: 
+
+sudo apt -y upgrade
+senha:
+error:
+
+sudo apt install curl mlocate default-jdk -y
+senha:
+error:
+
+*****wget https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
+OK
+
+----Exemplo abaixo:
+tar xvf spark-3.3.1-bin-hadoop3.tgz
+OK
+
+sudo mv spark-3.3.1-bin-hadoop3/ /opt/spark
+senha:
+error:
+
+sudo gedit ~/.bashrc
+---editando as variaveis no editor de texto
+export SPARK_HOME=/opt/spark
+export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+source ~/.bashrc
+
+-----inicializando o spark ur
+start-master.sh
+
+---url
+localhost:8080
+
+---inicializar o spark scala
+/opt/spark/sbin/start-slave.sh spark://localhost:7077
+
+---acessar o spark atraves do shell - na linguaguem scala
+spark-shell
+
+---acessar o spark atraves do shell - na linguaguem python
+pyspark
+
+>>>
+
+---Instalando as bibliotecas
+sudo apt install python3.pip
+senha:
+confirmação:
+
+pip install numpy
+senha:
+confirmação:
+pip install pandas
+senha:
+confirmação:
+
+sudo apt update
+sudo apt install openssh-server
+confirmação:
+=============================================================================================================================
+-------Preparando o ambiente-------
+#Atualizar o apt
+sudo apt update
+sudo apt -y upgrade
+
+#Instalando o Java
+sudo apt install curl mlocate default-jdk -y
+
+#Instalar o Spark
+wget https://dlcdn.apache.org/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
+#Extrair arquivo
+tar xvf spark-3.3.1-bin-hadoop3.tgz
+
+#Movendo para a pasta para o diretorio opt
+sudo mv spark-3.3.1-bin-hadoop3/ /opt/spark
+
+#editando as variaveis no editor de texto
+sudo gedit ~/.bashrc
+export SPARK_HOME=/opt/spark
+export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+#Informar para o sistema que o arquivo foi editado
+source ~/.bashrc
+
+#Inicializar o Nó Master
+start-master.sh
+localhost:8080
+
+#Inicializar o Worker Process do Spark
+/opt/spark/sbin/start-slave.sh spark://localhost:7077
+
+#acessar o spark atraves do shell - na linguaguem python
+pyspark
+
+#Instalando o gerenciador de pacotes
+sudo apt install python3.pip
+
+#Instalando as bibliotecas adicionais (irei usar durante o curso)
+pip install numpy
+pip install pandas
+
+#Navegando no diretorio:
+cd /opt/spark/
+ls
+cd examples/
+ls
+cd src
+ls
+cd main
+ls
+cd python/
+ls
+gedit pi.py
+
+#Rodando um arquivo como exemplo:
+#Voltar no diretório Home
+cd ~
+#Rodando um arquivo como exemplo:
+run-example SparkPi
+
+#Mudando de diretorio:
+cd /var/log
+ls
+
+#Rodando um arquivo como exemplo:
+run-example JavaWordCount kern.log
+
+#Baixando alguns arquivos:
+pwd
+wget www.datascientist.com.br/bigdata/download.zip
+ls
+
+#Descompactar o arquivo
+unzip download.zip
+ls
+
+#Atualizando 
+sudo apt update
+sudo apt install openssh-server
+=============================================================================================================================
+-------Seção 3: DataFrames e RDDs-------
+#iniciar o pyspark
+pyspark
+
+#criando um RDD
+numeros = spark.parallelize([1,2,3,4,5,6,7,8,9,10])
+
+#diversas ações 
+numeros.take(5)
+numeros.top(5)
+
+#todos os elementos
+numeros.collect()
+
+#operações aritiméticas
+numeros.count()
+numeros.mean()
+numeros.sum()
+numeros.max()
+numeros.min()
+numeros.stdev()
+
+#transformações
+#filtro
+filtro = numeros.filter(lambda filtro: filtro > 2)
+filtro.collect()
+
+#amostra com reposição 
+amostra = numeros.sample(True,0.5,1)
+amostra.collect()
+
+#map, aplica uma função
+mapa = numeros.map(lambda mapa: mapa * 2)
+mapa.collect()
+
+#criamos outro RDD
+numeros2 = sc.parallelize([6,7,8,9,10])
+
+#operador Union - gera rdd com os 2 conjuntos
+uniao = numeros.union(numeros2)
+uniao.collect()
+
+#intersecção
+interseccao = numeros.intersection(numeros2)
+interseccao.collect()
+
+#subtração
+subtrai =numeros.subtract(numeros2)
+subtrai.collect()
+
+#produto cartesiano
+cartesiano = numeros.cartesian(numeros2)
+cartesiano.collect()
+
+#ação, contar por valor numero de vezes que cada valor aparece
+cartesiano.countByValue()
+
+#compras, codigo do cliente e valor
+compras = sc.parallelize([(1,200),(2,300),(3,120),(4,250),(5,78)])
+#separar chaves
+chaves = compras.keys()
+chaves.collect()
+#separar valores
+valores = compras.values()
+valores.collect()
+#conta elementos por chave
+compras.countByKey()
+
+#aplica função no valor, sem aterar chave
+soma = compras.mapValues(lambda soma: soma + 1)
+soma.collect()
+
+#agrupa por chave
+agrupa = compras.groupByKey().mapValues(list)
+agrupa.collect()
+
+#debitos, codigo cliente e valor
+debitos = sc.parallelize([(1,20),(2,300)])
+
+#inner join entre compras e debitos
+resultado = compras.join(debitos)
+resultado.collect()
+
+#remove e mostra apenas quem tem debito
+semdebito = compras.subtractByKey(debitos)
+semdebito.collect()
+=============================================================================================================================
